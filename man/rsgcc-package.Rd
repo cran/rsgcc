@@ -20,6 +20,24 @@
 }
 
 }
+
+\note{
+
+1) The implement of rsgcc requires several other R packages (e.g., biwt, ctc, stringr, fBasics, snowfall, gplots, gWidgetsRGtk2, et al.). Please properly install the packages required in the installation procession.
+
+2) To install ctc package, please use the biocLite resource with the following commends:
+
+      source("http://bioconductor.org/biocLite.R")
+
+      biocLite("ctc")
+
+3) To run the rsgcc.gui function, do remember to select the GUI toolkit "gWidgetsRGtk2".
+
+4) Bug reports and suggestions/questions can be sent to Chuang Ma (chuangma2006@gmail.com).
+	
+}
+
+
 \author{
 	Chuang Ma, Xiangfeng Wang.
 	Maintainer: Chuang Ma <chuangma2006@gmail.com>

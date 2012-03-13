@@ -216,13 +216,12 @@ Chuang Ma, Xiangfeng Wang
 
 \dontrun{
    data(rsgcc)
-   x <- rnaseq[1:1000,]
-      
-   #get expression matrix of tissue-specific genes
-   x <- getsgene(x)$tsgene
+         
+   #get expression matrix of tissue-specific genes, here we obtained 2279 ts-genes
+   x <- getsgene(rnaseq)$tsgene
 
    #heat map of tissue-specific genes
-   thm <- gcc.tsheatmap(x, cpus = 1, cormethod = "GCC", 
+   thm <- gcc.tsheatmap(x[2100:2279,], cpus = 1, cormethod = "GCC", 
                     distancemethod = "Raw", clustermethod = "complete")
 }
 }

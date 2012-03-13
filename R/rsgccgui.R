@@ -8,12 +8,11 @@ if( !require(gWidgetsRGtk2) ) install.packages("gWidgetsRGtk2", dependencies=TRU
 if( !require(gWidgets) ) install.packages("gWidgets", dependencies=TRUE)
 if( !require(fBasics)) install.packages("fBasics")
 if( !require(gplots)) install.packages("gplots")
-if( !require(ctc) ) { source("http://bioconductor.org/biocLite.R"); biocLite("ctc")}
 require(gWidgetsRGtk2)
 require(gWidgets)
 require(fBasics)
 require(gplots)
-require(ctc)
+
 
 options("guiToolkit"="RGtk2")
 
@@ -64,6 +63,8 @@ ColMin <- 16776960
 ##data to color index
 coverDecToHex <- function(x) {
   
+  ##tt <- x
+  ##class(tt) <- "hexmode"
   tt <- .dec.to.hex(x)
   strlen <- str_length(tt)
   if( strlen > 6 ) {
@@ -312,6 +313,14 @@ saveData <- function(h,...) {
   }#end for i
   
   write.table( cor_pairs[1:k,], cor_file_dir, sep="\t",  row.names = FALSE, col.names = FALSE, quote = FALSE)
+
+  if( !require(ctc) ) { 
+      biocLite <- NULL
+      rm(biocLite)
+      source("http://bioconductor.org/biocLite.R")
+      biocLite("ctc")
+  }
+  require(ctc)
   
   cdt_file_dir <- paste(data_file_dir, "_rsgcc_cluster.cdt", sep="")
   r2atr( hm_dataframe$hcc$hc, distance = "GCC", file = paste(data_file_dir, "_rsgcc_cluster.atr", sep=""))

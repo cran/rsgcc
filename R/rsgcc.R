@@ -251,8 +251,8 @@ onegcc <- function(x, y) {
      for( i in 1:pernum ) {
 
        ##get system time for seed and then generate random index
-       curtime <- format(Sys.time(), "%7H%7M%OS4")
-       XXX <- substring(curtime, seq(1,nchar(curtime),7), seq(7,nchar(curtime),7))
+       curtime <- format(Sys.time(), "%H:%M:%OS4")
+       XXX <- unlist(strsplit(curtime, ":"))
        curtimeidx <- (as.numeric(XXX[1])*3600 + as.numeric(XXX[2])*60 + as.numeric(XXX[3]))*10000
        set.seed( curtimeidx )
        TT = sort(runif(Length),index.return=TRUE)$ix
