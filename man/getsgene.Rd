@@ -1,0 +1,68 @@
+\name{getsgene}
+\alias{getsgene}
+
+
+\title{
+	identify tissue(or condtion)-specific genes
+}
+
+\description{
+	This function identifies tissue(or condition)- specific genes by considering the difference between the mean expression value of one tissue and the max expression value of other tissue.
+}
+\usage{
+getsgene(x, Log = FALSE, Base = 2, AddOne = FALSE, tsThreshold = 0.95, Fraction = TRUE)
+}
+
+
+\arguments{
+  \item{x}{
+	a numeric matrix containing gene expression value. The column labels are samples names. For two samples from the same tissue T, their names should be assigned as T.1 and T.2, respectively.
+}
+  \item{Log}{
+	logical indicating whether the gene expression value would be log-transformed.
+}
+  \item{Base}{
+	a numeric value specifying the base of logarithm.
+}
+  \item{AddOne}{
+	logical indicating if add one for avoding the problem of log-zero.
+}
+  \item{tsThreshold}{
+	a numeric value giving the threshold of tissue specificity score. The tissue specificity score is 1, if the gene is only expressed in one tissue. Otherwise, the tissue specificity socre will be smaller than 1.
+}
+  \item{Fraction}{
+	logical indicating whether the gene expression value would be scaled across tissues. 
+}
+}
+\details{
+	The tissue specificity score is calculated with the formula 1-min(R(1), R(2), ..., R(i),..., R(n)), where R(i) = M(i)/E(i), E(i) is the mean expression value of tissue i, and M(i) is the maximal expression value of other tissues. If the tissue specificity score higher than tsThreshold, then the gene is considered as tissue specifically expressed. 
+	
+	If Fraction is TRUE, the expression values of a gene is scaled accorss the tissues with the formula e(i)/(e(1)+e(2)+...+e(n)). e(i) is the expression value of the consider gene in ith sample.
+}
+\value{
+	A list with following components:
+    \item{tsgene }{a data matrix containing expression vlaues of tissue specific genes.}
+    \item{tscore }{a data matrix with three columns containg the gene index information from x, tissue specificity score and the tissue information with the tissue specificity score.}
+    \item{uniquets }{a data matrix containing the unqiue tissue informaiton output by uniqueTissues function.}
+}
+
+
+
+\author{
+Chuang Ma, Xiangfeng Wang.
+}
+
+
+\seealso{
+\code{\link{uniqueTissues}}, \code{\link{gcc.tsheatmap}}.
+}
+
+
+\examples{
+   data(rsgcc)
+   x <- rnaseq[1:100,]
+   tsgene <- getsgene(x, Fraction = TRUE)
+}
+
+
+\keyword{ tissue specific }
