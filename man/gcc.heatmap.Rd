@@ -91,7 +91,7 @@ gcc.heatmap(x,
 	the number of cpus used for correlaiton calcluation. snowfall package in R needed to be installed in advance.
 }
   \item{cormethod}{
-	a character string that specifies a correlation method to be used for correlation calculation. Currently, the available correlation methods include: "GCC" (Gini correlation", "PCC" (Pearson's product-moment correlation), "SCC" (Spearman's rank correlation), "KCC"(Kendall's rank correlation), "BiWt" (Tukey's biweight correlation). 
+	a character string that specifies a correlation method to be used for correlation calculation. 
 }
   \item{distancemethod}{
 	a character string specifying the distance method to be used. Currently, three distance methods are available, include: "Raw" (1-cor)", "Abs" (1-|cor|), and "Sqr" (1-|cor|^2).
@@ -265,7 +265,7 @@ Chuang Ma, Xiangfeng Wang
 }
 
 \note{
-	This function clusters microarray and RNA-Seq gene expression data and plot heatmap by refining heatmap.2 function in gplots package. Therefore, some parameters and output values are defined similarly as those in heatmap.2. Thanks to the authors of gplots package for selflessly providing scripts to the R community.
+	This function clusters microarray and RNA-Seq gene expression data and plot heatmap by refining heatmap.2 function in gplots package. Therefore, most parameters and output values are defined similarly as those in heatmap.2.
 }
 
 

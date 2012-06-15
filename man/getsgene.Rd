@@ -60,8 +60,8 @@ Chuang Ma, Xiangfeng Wang.
 
 \examples{
    data(rsgcc)
-   x <- rnaseq[1:100,]
-   tsgene <- getsgene(x, Fraction = TRUE)
+   x <- rnaseq[1:50,]
+   tsgene <- getsgene(x, tsThreshold = 0.95, Fraction = TRUE)
 }
 
 

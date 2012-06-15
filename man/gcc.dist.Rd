@@ -18,9 +18,9 @@ gcc.dist(x,
 }
 
 \arguments{
-  \item{x}{a data matrix containing numeric variables. Example: rows may correspond to genes and columns to samples.}
+  \item{x}{a data matrix containing numeric variables, which is the same as the "GEMatrix" defined in the cor.matrix function.}
   \item{cpus}{the number of cpus used for computation.}
-  \item{cormethod}{a character string indicating the correlation method to be used. Currently, the available correlation methods include: "GCC" (Gini correlation", "PCC" (Pearson's product-moment correlation), "SCC" (Spearman's rank correlation), "KCC"(Kendall's rank correlation), and "BiWt" (Tukey's biweight correlation).}
+  \item{cormethod}{a character string indicating the correlation method to be used. }
 
   \item{distancemethod}{a character string indicating the distance method to be used. Currently, three distance methods are available, include: "Raw" (1-cor)", "Abs" (1-|cor|), and "Sqr" (1-|cor|^2). }
   

@@ -57,6 +57,8 @@ ColMax <- 16711680
 ColMean <- 122
 ColMin <- 16776960
 
+tsScore <- 0.95
+
 
 
   
@@ -92,7 +94,7 @@ updateRun <- function(h,...) {
   cat("Starting to run...\n")
   print(SimilarityMethodType)
   if( TSGeneClusterFlag == 1 ) {
-    tsgene_matrix <<- getsgene(x, Fraction= TRUE)$tsgene
+    tsgene_matrix <<- getsgene(x, tsThreshold = tsScore, Fraction= TRUE)$tsgene
     
     hm_dataframe <<- gcc.tsheatmap(tsgene_matrix, cpus = CPUNum, 
                             cormethod = CorMethodType, 
@@ -345,8 +347,9 @@ Selectedfiles <- gbutton(c("Click here to load"), handler= fileChoose, container
 #read and display data
 tmp <- gcheckbox("Display loaded data", checked = FALSE, handler = visData, container = group)
 
+
 #find and cluster tissue/condition specific genes
-tmp <- gcheckbox("Find and cluster ts-genes", checked = FALSE, 
+tmp <- gcheckbox("Find ts-genes for clustering analysis", checked = FALSE, 
                  handler = function(h,...) { 
                    if( svalue(h$obj) == TRUE ) { 
                      TSGeneClusterFlag <<- 1
@@ -355,6 +358,15 @@ tmp <- gcheckbox("Find and cluster ts-genes", checked = FALSE,
                       TSGeneClusterFlag <<- 0
                     } }, 
                  container = group)
+
+#threshold for tsScore
+tmp <- gframe("Threshold for tissue specificity score", container=group)
+tsScoreAdjust <- gedit(text = "0.95", width = 30, coerce.with=as.numeric, horizontal=FALSE, 
+                   handler=function(h,...){tsScore <<- svalue(h$obj); cat("Threshold for tissue specificity score:", tsScore, "\n")})
+add(tmp, tsScoreAdjust)
+
+
+
 
 tmp <- gframe("Step 2: Select a correlation method", container=group)
 Correlations <- gradio(names(availCor), horizontal=FALSE, 

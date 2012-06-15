@@ -8,7 +8,7 @@
 
 
 \description{
-	Hierarchical cluster analysis of microarrany and RNA-Seq gene expression data with Gini correlation and other correlation methods.
+	Hierarchical cluster analysis of microarrany and RNA-Seq gene expression data with Gini correlation and four other correlation methods.
 }
 
 
@@ -23,9 +23,9 @@ gcc.hclust(x,
 
 
 \arguments{
-  \item{x}{a data matrix containing numeric variables. Example: rows may correspond to genes and columns to samples.}
+  \item{x}{a data matrix containing numeric variables, which is the same as the GEMatrix defined in the cor.matrix function.}
   \item{cpus}{the number of cpus used for computation.}
-  \item{cormethod}{a character string indicating the correlation method to be used. Currently, the available correlation methods include: "GCC" (Gini correlation", "PCC" (Pearson's product-moment correlation), "SCC" (Spearman's rank correlation), "KCC"(Kendall's rank correlation), and "BiWt" (Tukey's biweight correlation).}
+  \item{cormethod}{a character string indicating the correlation method to be used.}
   \item{distancemethod}{a character string specifying the distance method to be used. Currently, three distance methods are available, include: "Raw" (1-cor)", "Abs" (1-|cor|), and "Sqr" (1-|cor|^2).}
   \item{clustermethod}{the distance measure to be used. This must be one of "complete", "average", "median", "centroid", "mcquitty", "single", or "ward".}
 }
@@ -50,10 +50,11 @@ gcc.hclust(x,
 
 \examples{
 
+   #obtain gene expression data of 10 genes.
    data(rsgcc)
    x <- rnaseq[1:10,]
       
-   #hierarchical clustering analysis with GCC method
+   #hierarchical clustering analysis of these 10 genes with GCC method
    hc <- gcc.hclust(x, cpu=1, cormethod = "GCC", 
                     distancemethod = "Raw", clustermethod = "complete")
 

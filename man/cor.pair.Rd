@@ -4,13 +4,13 @@
 \alias{gcc.corpair}
 
 \title{
-	compute correlations for a gene pair
+	compute correlation for two genes in the pair
 }
 
 
 
 \description{
-	This function computes the correlation with Gini correlation and other correlation methods for a pair of individuals (e.g., gene pair), and calculates the statistical significance of correlations with the permutation test method.
+	This function can compute the correlation of a pair of genes with Gini correlation and four other correlation methods. The signficance level (p-value) of computed correlation can be estimated with the permutation test method.
 }
 
 
@@ -27,16 +27,16 @@ cor.pair(idxvec,
 
 \arguments{
   \item{idxvec}{
-	a numer vector containing two elements for the index of genes or samples in GEMatrix.
+	a numer vector containing two elements for the index of genes or samples in GEMatrix (e.g., c(1,2) ).
   }
   \item{GEMatrix}{
-	a data matrix containing numeric variables. Example: rows may correspond to genes and columns to samples. 
+	a data matrix containing numeric variables. Example: rows correspond to genes and columns to samples. This parameter is the same as the "GEMatrix" defined for cor.matrix.
   }
   \item{rowORcol}{
-	a character string ("row" or "col") indicating the gene expression profiles are extracted by rows("row") or columns ("col"). 
+	a character string ("row" or "col") indicating gene expression data will be extracted by rows or columns for correlation calculation. "row": correlation between two genes. "col": correlaiton between two samples.
   }
   \item{cormethod}{
-	a character string that specifies a correlation method to be used for correlation calculation. Currently, the available correlation methods include: "GCC" (Gini correlation", "PCC" (Pearson's product-moment correlation), "SCC" (Spearman's rank correlation), "KCC"(Kendall's rank correlation), and "BiWt" (Tukey's biweight correlation). 
+	a character string that specifies the correlation method to be used for correlation calculation. 
   }
   \item{pernum}{
 	the number of permutation test used for calcluating statistical significance level (i.e., p-value) of correlations. 
@@ -68,7 +68,7 @@ Chuang Ma, Xiangfeng Wang
 \note{
 (1) To perform BiWt, the R package "biwt" should be installed in advance. 
 
-(2) When the cormethod defined as "GCC", this function will output a list with four numeric elements: gcc.rankx, gcc.ranky, gcc.rankx.pvalue, gcc.ranky.pvalue.
+(2) When the cormethod is defined as "GCC", this function will output a list with four numeric elements: gcc.rankx, gcc.ranky, gcc.rankx.pvalue, gcc.ranky.pvalue. Otherwise, it will output a list with two elements (cor and p-value)
 }
 
 
@@ -82,13 +82,25 @@ Chuang Ma, Xiangfeng Wang
 
 \examples{
 
-   data(rsgcc)
-   x <- rnaseq[1:50,]
+   data(rsgcc)        #load the sample data in rsgcc package
+   x <- rnaseq[1:4,]  #construct a GEMatrix with the RNA-Seq data of the first four genes
 
-   #compute correlation between 47th and 50th genes
-   corpair <- cor.pair(c(47,50), GEMatrix = x, rowORcol = "row", 
+   #compute correlation between the 1st and 4th genes
+   corpair <- cor.pair(c(1,4), GEMatrix = x, rowORcol = "row", 
+                       cormethod = "GCC", pernum = 0, 
+                       sigmethod = "two.sided")  
+\dontrun{
+   #compute correlation between the 1st and 4th genes, 
+   #the p-value of correlation will be estimated with 2,000 permuation test.
+   corpair <- cor.pair(c(1,4), GEMatrix = x, rowORcol = "row", 
                        cormethod = "GCC", pernum = 2000, 
                        sigmethod = "two.sided")  
+
+   #compute correlation between the 1st and 4th samples
+   corpair <- cor.pair(c(1,4), GEMatrix = x, rowORcol = "col", 
+                       cormethod = "GCC", pernum = 0, 
+                       sigmethod = "two.sided")  
+}
 }
 
 \keyword{ correlation }

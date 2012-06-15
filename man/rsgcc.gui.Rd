@@ -53,11 +53,11 @@ Chuang Ma, Xiangfeng Wang
 
 	The following is a guide of using the rsgcc GUI.
 
-Step 1: Select a gene expression data file and load expression data with read.table or read.csv, which is decided by the program itself according to the file suffix (".txt", ".csv", or nothing). Each row of the table is one gene, and each column is the expression data of one sample. The column names are sample IDs indiciating the tissue informaiton (i.e., "T1.1", "T1.2", "T2"). After the data is alreadly loaded, you can click the option ("Display loaded data") to display the gene expression datain a new window. If the tissue-specific genes are interested for the clustering analysis, please select the option ("Find and cluster ts-genes").
+Step 1: Select a gene expression data file and load expression data with read.table or read.csv, which is decided by the program itself according to the file suffix (".txt", ".csv", or nothing). Each row of the table is one gene, and each column is the expression data of one sample. The column names are sample IDs indiciating the tissue informaiton (i.e., "T1.1", "T1.2", "T2"). After the data is alreadly loaded, you can click the option ("Display loaded data") to display the gene expression datain a new window. If the tissue-specific genes are interested for the clustering analysis, please select the option ("Find and cluster ts-genes") and specify the threshold of tissue-specificity score (Default 0.95. The threshold should be smaller than 1.0; the <ENTER> MUST be pressed to confirm the change ).
 
-Step 2: Selecte a correlation method. The default method is Gini correlation. It can also changed to other correlation methods.
+Step 2: Selecte a correlation method. Default: Gini correlation. 
 
-Step 3: Specify a distance measure. Three types of distance measures are already provided to you. The default one is the raw correlation (1-coef).
+Step 3: Specify a distance measure. Default: raw correlation (1-coef).
 
 Step 4: Choose a cluster method. In current version, rsgcc includes seven cluster methods. More information about these cluster methods can be found at the help page of hclust function.
 
@@ -67,7 +67,7 @@ Step 6: Press the button "Start to run" to perform the correlation and clusterin
 
 Step 7: Three bars can be slided to adjust colors in heat map. 
 
-Step 8: After the appropriate colors have already determined, you can "save correlation and cluster data". The correlations will be output to a file with three columns (gene1, gene2, correlation). The cluster information will be output into three files (the suffix are ".atr", ".gtr" and ".cdt") for visualizing and analyzing by Treeview program. A pdf file will also be generated for heat map. All these files in the same directory of gene expression data file. 
+Step 8: After the appropriate colors have already been determined, you can "save correlation and cluster data". The correlations will be output to a file with three columns (gene1, gene2, correlation). The cluster information will be output into three files (the suffix are ".atr", ".gtr" and ".cdt") for visualizing and analyzing by Treeview program. A pdf file will also be generated for heat map. All these files in the same directory of gene expression data file. 
 }
 
 

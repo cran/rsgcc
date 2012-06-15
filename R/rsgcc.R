@@ -184,7 +184,7 @@ onegcc <- function(x, y) {
     if( cormethod == "PCC") { return(cor.test(g1, g2, method="pearson")$estimate) }
     else if( cormethod == "SCC" ) { return(cor.test(g1, g2, method="spearman")$estimate) }
     else if( cormethod == "KCC" ) { return(cor.test(g1, g2, method="kendall")$estimate) }
-    else if( cormethod == "BiWt" ){ return(biwt.cor(matrix(c(g1,g2), nrow=2), output="vector")[1]) }
+    else if( cormethod == "BiWt" ){ return(biwt.cor(t(matrix(c(g1,g2), ncol=2)), output="vector")[1]) }
     else if( cormethod == "GCC" ){
       return(list( gcc.rankx = onegcc(g1,g2), gcc.ranky = onegcc(g2,g1) ) )
     }
@@ -311,17 +311,17 @@ cor.matrix <- function( GEMatrix,
   
   #check cormethod
   if( length( cormethod ) > 1 ) {
-    stop("Error: length of cormethod must be 1")
+    cat("Warning: one correlation method should be specified. Default:GCC")
   }
   
   #check style
   if( length(style) > 1 ) {
-    stop( "Error: length of style must be 1")
+    cat( "Warning: one style should be specified. Default: all.pairs")
   }
   
   #check sigmethod 
   if( pernum > 0 & length( sigmethod ) > 1 ) {
-    stop("Error: length of sigmethod must be 1")
+    sigmethod = "two.sided"
   }
   if( pernum == 0 ) {
     sigmethod <- "two.sided"
@@ -340,8 +340,8 @@ cor.matrix <- function( GEMatrix,
     rownames(GEMatrix) <- seq(1,dim(GEMatrix)[1], by=1)
   }
   
-  VariableNum <- dim(GEMatrix)[1]
-  SampleSize <- dim(GEMatrix)[2]
+  VariableNum <- nrow(GEMatrix)
+  SampleSize <- ncol(GEMatrix)
   if( VariableNum <= 1 || SampleSize <= 1 ){
     stop("Error:the number of variable is less than 2, or the number of observation is less than 2 ")
   }
@@ -354,7 +354,7 @@ cor.matrix <- function( GEMatrix,
   }
   
   if( style == "adjacent.pairs") {
-    var1.id <- seq(1, 2*floor(VariableNum/2), by=2)
+    var1.id <- seq(1, (VariableNum-1), by=1)
     var2.id <- var1.id + 1  
   }
   

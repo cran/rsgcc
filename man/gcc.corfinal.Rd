@@ -5,7 +5,7 @@
 	get the final correlaiton and p-value of Gini method
 }
 \description{
-	Compare two correlations produced by GCC method for one gene pair, and chose one as the final output of GCC method.
+	Compare two correlations produced by GCC method for a gene pair, and choose one as the final output of GCC method.
 }
 
 
@@ -42,11 +42,13 @@ Chuang Ma, Xiangfeng Wang
 }
 \examples{
    data(rsgcc)
-   x <- rnaseq[1:50,]
+   x <- rnaseq[1:4,]
 
-   #compute correlation between 4th and 7th genes
-   corpair <- cor.pair(c(4,7), GEMatrix = x, rowORcol = "row", 
-                       cormethod = "GCC", pernum = 2000, 
+   #compute correlation between 1th and 4th genes
+   #significance level of the computed correlation 
+   #is calcuated with 200 permutation tests.
+   corpair <- cor.pair(c(1,4), GEMatrix = x, rowORcol = "row", 
+                       cormethod = "GCC", pernum = 200, 
                        sigmethod = "two.sided") 
 
    #get the final correlation and p-value of GCC method 
