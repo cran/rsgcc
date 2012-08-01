@@ -37,8 +37,8 @@ gcc.hclust(x,
 
 \value{
 	A list with the following components:
-  \item{hc }{an object describes the tree information produced by the clustering process. This object is also a list with five components: "merge" is a numeric matrix with n-1 rows and 2 columns. n is the number of used individuals (e.g., genes). Row i describes the merging of clusters at step i of the clustering. "order" is a vector giving the order of individuals for tree cluster plotting. "height" is a vector with n-1 numeric values associated with the distance measure for the particular cluster method. "labels" are labels of the individuals being clustered. "method" is the distance measure used for cluster analysis. See details for the description in hclust function of stats package.}
-  \item{dist }{a data matrix containing the distances between different genes.}
+  \item{hc}{an object describes the tree information produced by the clustering process. This object is also a list with five components: "merge" is a numeric matrix with n-1 rows and 2 columns. n is the number of used individuals (e.g., genes). Row i describes the merging of clusters at step i of the clustering. "order" is a vector giving the order of individuals for tree cluster plotting. "height" is a vector with n-1 numeric values associated with the distance measure for the particular cluster method. "labels" are labels of the individuals being clustered. "method" is the distance measure used for cluster analysis. See details for the description in hclust function of stats package.}
+  \item{dist}{a data matrix containing the distances between different genes.}
   \item{pairmatrix }{a data matrix including the correlation between different genes.}
 }
 

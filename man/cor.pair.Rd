@@ -4,7 +4,7 @@
 \alias{gcc.corpair}
 
 \title{
-	compute correlation for two genes in the pair
+	compute the correlation between two genes
 }
 
 

@@ -1,4 +1,4 @@
-8d80b379f95e54e4c84d68d34c1bdb40 *DESCRIPTION
+3feca4656decf47308b7f0d6dd818560 *DESCRIPTION
 8b54e5a89fbda3af5e077053d40bec76 *NAMESPACE
 9be1b189d1870348f69f3af55261abfc *R/getdist.R
 67e04c52fbc8797bb8698cc2e4f67e66 *R/gethclust.R
@@ -8,16 +8,16 @@ fa399a675128bc6533b228869a505f71 *R/rsgccgui.R
 d2db0dd00d3077f0dca447764f5aaafb *R/tsheatmap.R
 a8b918453d9e692e04792330b6142d75 *data/datalist
 733711503307b491e5a249fd701e7058 *data/rsgcc.rda
-131d5a74e8b5e3454b876294d5d0941d *man/cor.matrix.Rd
-0f73e6f53d8cf3522998c3ad71b305b2 *man/cor.pair.Rd
+c2f794e90f756b1f6099b77305a5ef43 *man/cor.matrix.Rd
+be1e68cb4e6437a09c93793a82f5e335 *man/cor.pair.Rd
 53d0d6cc4af03349dd3a663a87144a98 *man/data.Rd
 ce67d5ca9d548c15d7f43d05e0b86850 *man/gcc.corfinal.Rd
 3a0f88bd96852fa75461aec1bbdb6d22 *man/gcc.dist.Rd
-a91d72af400df1dae56d3a5bfaee6928 *man/gcc.hclust.Rd
+5fcce78c89da0829e0fecaba27674e10 *man/gcc.hclust.Rd
 b63161379eac664bd6a34af1e7274462 *man/gcc.heatmap.Rd
 4d995be16b1a5713182ae6b1fac41f6c *man/gcc.tsheatmap.Rd
 ba5c4ebd60d4dcf6df634220e8466347 *man/getsgene.Rd
-6a088b160a6e19b313f4becbd3384e78 *man/onegcc.Rd
-4ef9a1f96e9cb36b969bc7f2dbc83903 *man/rsgcc-package.Rd
+df58633bcc7bbfae6b26f88f0ca532ae *man/onegcc.Rd
+baf40da28ccf9d7abb5cfa34ee28a8ac *man/rsgcc-package.Rd
 593b33c7eaffc3ba9f04bfaa5106ea71 *man/rsgcc.gui.Rd
 765931377cbcecfd0e13b2b3d7da0c41 *man/uniqueTissues.Rd

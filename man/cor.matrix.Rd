@@ -94,7 +94,7 @@ gene3	2	11	10	6
 
 
 Then the GEMatrix can be obtained by load this gene expression file with the command: 
-x <- data.matrix(read.table("/home/rsgcc/geneExpFile.txt"))
+x <- as.matrix(read.table("/home/rsgcc/geneExpFile.txt"))
 
 (1) var1.id and var2.id should be defined with the numeric vector format for "pairs.between", or "one.pair" styles. 
 
@@ -115,7 +115,6 @@ x <- data.matrix(read.table("/home/rsgcc/geneExpFile.txt"))
 \dontrun{
    data(rsgcc)        #load the sample data in rsgcc package
    x <- rnaseq[1:4,]  #construct a GEMatrix with the RNA-Seq data of the first four genes
-
 
    #run on one CPU for all the possible gene pairs in the GEMatrix "x".
    #do not cacluate the p-value of computated correlations.

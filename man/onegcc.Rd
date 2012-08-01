@@ -35,7 +35,7 @@
    data(rsgcc)
    x <- rnaseq[1:10,]     #Just use a small subset of RNA-Seq data 
    onegcc(x[1,], x[2,])   # generate one correlaiton for one gene pair
-   onegcc(x[2,], x[1,])   # generate one correlaiton for the same gene pair
+   onegcc(x[2,], x[1,])   # generate the other correlaiton for the same gene pair
 }
 
 
