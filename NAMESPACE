@@ -1,1 +1,2 @@
+useDynLib(rsgcc)
 exportPattern("^[[:alpha:]]+")

@@ -16,6 +16,10 @@
 if( !require(biwt)) install.packages("biwt")
 require(biwt)
 
+if( !require(parmigene)) install.package("parmigene")
+library(parmigene)
+
+
 
 
 #########################################################################
@@ -960,4 +964,76 @@ gcc.heatmap <- function(x,
   return( list(retval = retval, hcr = hcr, hcc = hcc) )
 }
  
+
+##check whether x is a data matrix and k for KNN-based MI esimator.
+.check.matrix <- function(x, k, name) {
+  if ((!is.matrix(x) && !is.data.frame(x)) || nrow(x) < 2) {
+    stop(paste(name, "must be a multi-row matrix or a data.frame"))
+  } else if (ncol(x) <= k) {
+    stop(paste(name, " has too few columns (must be > ", k, ")", sep=""))
+  }
+}
+
+
+
+##check the variable with multiple elements.
+.check.variable <- function(var, name) {
+   if( is.vector(var) ) {
+     vartmp = var[1]
+   }
+   if( length(vartmp) == 0 ) {
+     stop( paste(name, "must have a value with the candicate parameters."))
+   }
+   return(vartmp)
+}
+
+
+
+#correlations for gene pairs of all genes
+.cor_all <- function(xs, corMethod = "GCC") {
+  h <- nrow(xs)
+  w <- ncol(xs)
+  k <- 3
+  noise <- 0.0
+
+  corIndex <- c(1,2,3,4)
+  names(corIndex) <- c("GCC", "PCC", "SCC", "KCC")
+  curcorIndex <- corIndex[corMethod]
+
+  res <- NULL
+  xsix <- NULL
+  if( corMethod == "GCC" || corMethod == "SCC"  ) {
+     xsix <- apply( xs, 1, function(x) sort( sort(x,index.return=TRUE)$ix, index.return=TRUE)$ix )
+     res <- .C("c_cor_all", as.integer(curcorIndex), as.double(t(xs)), as.integer(xsix), as.integer(h), as.integer(w), as.integer(k), as.double(noise), res = double(h*h), PACKAGE = "rsgcc", DUP = TRUE)$res
+  }else if( corMethod == "PCC" || corMethod == "KCC" ) {
+     res <- .C("c_cor_all", as.integer(curcorIndex), as.double(t(xs)), as.integer(xsix), as.integer(h), as.integer(w), as.integer(k), as.double(noise), res = double(h*h), PACKAGE = "rsgcc", DUP = TRUE)$res
+  }else{
+     stop("Error: undefined cor method).\n")
+  }
+
+  m <- matrix(res, nrow=h)
+  colnames(m) <- rownames(xs)
+  rownames(m) <- rownames(xs)
+  return(m)
+  
+}
+
+
+
+#generate adjacency matrix from a gene expression data
+adjacencymatrix <- function(mat, method = c("GCC", "PCC", "SCC", "KCC", "MI"), k = 3) {
+  .check.matrix(mat, k, "xs")
+  method <- .check.variable(method, "method")
+
+  if (method == "MI" && k < 2)
+    stop("k must be >= 2.")
+
+  #for knnmi
+  if( method == "MI" ){
+    return( knnmi.all(mat, k, noise=1e-12) )
+  }else{
+    return( .cor_all(mat, method) )
+  }
+}
+
 

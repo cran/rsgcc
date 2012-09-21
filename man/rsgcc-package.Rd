@@ -14,8 +14,8 @@
 \tabular{ll}{
 	Package: \tab rsgcc\cr
 	Type: \tab Package\cr
-	Version: \tab 1.0.3\cr
-	Date: \tab 2012-08-01\cr
+	Version: \tab 1.0.4\cr
+	Date: \tab 2012-09-21\cr
 	License: \tab GPL(>=2)\cr
 }
 
@@ -43,7 +43,7 @@
 	Maintainer: Chuang Ma <chuangma2006@gmail.com>
 }
 \references{
-	Chuang Ma, Xiangfeng Wang. (2012) Application of the Gini correlation coefficient to infer regulatory relationships in transcriptome analysis. Plant Physiology (PMID:22797655).
+	Chuang Ma, Xiangfeng Wang. Application of the Gini correlation coefficient to infer regulatory relationships in transcriptome analysis. Plant Physiology, 2012, 160(1):192-203.
 }
 
 
