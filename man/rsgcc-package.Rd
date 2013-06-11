@@ -14,18 +14,23 @@
 \tabular{ll}{
 	Package: \tab rsgcc\cr
 	Type: \tab Package\cr
-	Version: \tab 1.0.4\cr
-	Date: \tab 2012-09-21\cr
+	Version: \tab 1.0.5\cr
+	Date: \tab 2013-06-11\cr
 	License: \tab GPL(>=2)\cr
 }
-
 }
 
 \note{
 
 1) The implement of rsgcc requires several R packages developed by other developers(e.g., biwt, cairoDevice, fBasics, snowfall, grDevices, gplots, gWidgets, gWidgetsRGtk2, stringr, ctc). Please make sure that these packages have been successfully installed before loading the rsgcc package.
 
-2) A general method to install a new package on the computer is to use the command: install.package("packagename"). Some other methods can be found at http://math.usask.ca/~longhai/software/installrpkg.html. For the installation of ctc package, please use the biocLite resource with the following commands:
+2) A general method to install a new package on the computer is to use the command: 
+
+      install.package("packagename"). 
+
+   Some other methods can be found at http://math.usask.ca/~longhai/software/installrpkg.html. 
+
+   For the installation of ctc package, please use the biocLite resource with the following commands:
 
       source("http://bioconductor.org/biocLite.R")
 

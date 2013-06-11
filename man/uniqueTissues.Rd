@@ -35,9 +35,13 @@ Chuang Ma, Xiangfeng Wang
 \code{\link{getsgene}}, \code{\link{gcc.tsheatmap}}.
 }
 \examples{
+
+\dontrun{
    data(rsgcc)
    x <- rnaseq
    uniqueTissues(x)
+}
+
 }
 
 

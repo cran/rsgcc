@@ -41,6 +41,8 @@ Chuang Ma, Xiangfeng Wang
       \code{\link{onegcc}}, \code{\link{cor.pair}}.
 }
 \examples{
+
+\dontrun{
    data(rsgcc)
    x <- rnaseq[1:4,]
 
@@ -53,6 +55,7 @@ Chuang Ma, Xiangfeng Wang
 
    #get the final correlation and p-value of GCC method 
    gcc.corfinal(corpair)  
+}
 
 }
 

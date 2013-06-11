@@ -2,11 +2,14 @@
 
 #################################################################################################################
 ##This function plots HeatMap with different similarity measures (e.g., 1-CorCoef) for tissue/condition specific genes
-##Here cormethod could be GCC (Gini correlation coefficient), 
+##Here method could be GCC (Gini correlation coefficient), 
 ##PCC (Pearson product-moment correlation coefficient), 
 ##SCC (Spearman's rank correlation coefficient), 
 ##KCC (Kendall tau correlation coefficient) 
-##or BiWt(correlation estimates based on Tukey's biweight M-estimator)
+##BiWt(correlation estimates based on Tukey's biweight M-estimator)
+##MI (mutual information)
+##MINE
+##ED
 #################################################################################################################
 
  
@@ -15,7 +18,7 @@ gcc.tsheatmap <- function(x,
                         cpus = 1,
                         
                         ## correlation method
-                        cormethod = c("GCC", "PCC", "SCC", "KCC", "BiWt"),
+                        method = c("GCC", "PCC", "SCC", "KCC", "BiWt", "MI", "MINE", "ED"),
                           
                         distancemethod = c("Raw", "Abs", "Sqr"),
                            
@@ -130,7 +133,7 @@ gcc.tsheatmap <- function(x,
   ###################################################################################
   #get cluster information and , ordered geneID
   if( is.null(rowhcdata) ) { #no hcdata, ok, caclulate it
-    hcr <- gcc.hclust( x, cpus = cpus, cormethod = cormethod, distancemethod = distancemethod, clustermethod = clustermethod)  #clustered for rows
+    hcr <- gcc.hclust( x, cpus = cpus, method = method, distancemethod = distancemethod, clustermethod = clustermethod)  #clustered for rows
   }else {
     hcr <- rowhcdata
   }
@@ -140,7 +143,7 @@ gcc.tsheatmap <- function(x,
   
   ##for hcc data
   if( is.null(colhcdata ) ) { #no colhcdata, ok, cacluate it
-    hcc <- gcc.hclust( t(x), cpus = cpus, cormethod = cormethod, distancemethod = distancemethod, clustermethod = clustermethod)  #clustered for columns
+    hcc <- gcc.hclust( t(x), cpus = cpus, method = method, distancemethod = distancemethod, clustermethod = clustermethod)  #clustered for columns
   }else {
     hcc <- colhcdata
   }
@@ -240,7 +243,7 @@ gcc.tsheatmap <- function(x,
   }
   
   #################################################################################################
-  
+  call <- match.call()  #add 20130514
   retval$rowInd <- rowInd
   retval$colInd <- colInd
   retval$call <- match.call()
@@ -331,12 +334,12 @@ gcc.tsheatmap <- function(x,
    image(rbind(1:nr), col = RowSideCol, xaxt = "n", yaxt = "n")
    xv <- getAtpos(orderMatrix[which(orderMatrix[,4] > 0),4])
    axis(2, at=xv, labels=rownames(orderMatrix[which(orderMatrix[,4] > 0),]), las= HORIZONTAL<-1, cex.axis=1.2, adj = 1, xpd = TRUE )
- 
+
   #heat map
   image(1:nc, 1:nr, t(newx), 
         xlim = 0.5 + c(0, nc), ylim = 0.5 + c(0, nr), 
         axes = FALSE, xlab = "", ylab = "", 
-        col = col, breaks = breaks,...)
+        col = col, breaks = breaks, ...)
 
 
 

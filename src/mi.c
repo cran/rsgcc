@@ -141,11 +141,6 @@ coord_t c_gcc(mi_t* const m, const coord_t* const xs, const coord_t* const ys, c
   
   make_grid(&m->grid, xs, ys, m->n, m->k);
   
-//  for( int x = 0; x < m->n; x++ ) {
-//  	printf("%f, %f, %d, %d\n", xs[x], ys[x], xsix[x], ysix[x] );
-//  }
-//  printf("=======YY=====\n");
-  
   const int len = m->n;
   int xorder, yorder;
   coord_t vecx_x[len], vecx_y[len], vecy_y[len], vecy_x[len];
@@ -172,15 +167,11 @@ coord_t c_gcc(mi_t* const m, const coord_t* const xs, const coord_t* const ys, c
      
      accumy_y += weight*vecy_y[i];
      accumy_x += weight*vecy_x[i];
-     
-//     printf( "%d, %d, %f,%f,%f,%f,%f\n", i, len, weight, vecx_x[i], vecy_x[i], vecy_y[i], vecx_y[i] );
   }//for i
 
   coord_t gccx_y = accumx_y/accumx_x;
   coord_t gccy_x = accumy_x/accumy_y;
   coord_t final_gcc = gccx_y*gccx_y > gccy_x*gccy_x ? gccx_y : gccy_x;
-  
-//  printf( "%f, %f, %f, %f,  %f\n", gccx_y*gccx_y, gccy_x*gccy_x , gccx_y, gccy_x, final_gcc );
 
   destroy_grid(&m->grid);
 
@@ -189,80 +180,29 @@ coord_t c_gcc(mi_t* const m, const coord_t* const xs, const coord_t* const ys, c
 }
 
 
-/*
-//for gini correlation
-coord_t gini_correlation(mi_t* const m, const coord_t* const xs, const coord_t* const ys) {
-  
-//  const coord_t* pxs;
-//  const coord_t* pys;
+
+
+//for euclidean distance
+coord_t c_eudist( mi_t* const m, const coord_t* const xs, const coord_t* const ys) {
+  int i;
   make_grid(&m->grid, xs, ys, m->n, m->k);
 
-  int i, j;
-  coord_t tmp;
+  coord_t sum1 = 0.0;
+  coord_t t_tmp = 0.0;
   const int len = m->n;
-  coord_t xtmp[len], ytmp[len];
-  int itmp, xtmpIndex[len], ytmpIndex[len];
   for( i = 0; i < len; i++ ) {
-     xtmp[i] = xs[i];
-     xtmpIndex[i] = i;
-     
-     ytmp[i] = ys[i];
-     ytmpIndex[i] = i; 
-//     printf("%f,%d, %f, %d\n", xtmp[i], xtmpIndex[i], ytmp[i], ytmpIndex[i] );
-  }
-  //sort 
-  for( i = 0; i < len - 1; i++ ) {
-    for( j = i+1; j < len; j++ ) {
-      if( xtmp[j] < xtmp[i] ) {
-         tmp = xtmp[j];
-         xtmp[j] = xtmp[i];
-         xtmp[i] = tmp;
-
-         itmp = xtmpIndex[j];
-         xtmpIndex[j] = xtmpIndex[i];
-         xtmpIndex[i] = itmp;
-      }
-
-      if( ytmp[j] < ytmp[i] ) {
-
-         tmp = ytmp[j];
-         ytmp[j] = ytmp[i];
-         ytmp[i] = tmp;
-
-         itmp = ytmpIndex[j];
-         ytmpIndex[j] = ytmpIndex[i];
-         ytmpIndex[i] = itmp;
-       
-      }
-   }//end for j
- }//end for i
-
-  
-  coord_t accumx_x = 0;
-  coord_t accumx_y = 0;
-  coord_t accumy_y = 0;
-  coord_t accumy_x = 0;
-  for (i = 0; i < len; i++) {
-     //for order x
-     coord_t weight = 2.0*(i+1)- m->n -1.0;
-     accumx_x += weight*xtmp[i];
-     accumx_y += weight*xs[ytmpIndex[i]];
-
-     accumy_x += weight*ys[xtmpIndex[i]];
-     accumy_y += weight*ytmp[i];
- //    printf( "%d, %d, %f,%f,%f,%f,%f\n", i, len, weight, xtmp[i], xs[ytmpIndex[i]], ytmp[i], ys[xtmpIndex[i]] );
-  }//for i
-
-  coord_t gccx_y = accumx_y/accumx_x;
-  coord_t gccy_x = accumy_x/accumy_y;
-  coord_t final_gcc = gccx_y*gccx_y > gccy_x*gccy_x ? gccx_y : gccy_x;
-
+      t_tmp = xs[i] - ys[i];
+      sum1 += t_tmp*t_tmp;
+   }
+    
   destroy_grid(&m->grid);
 
-  return final_gcc;
-
+   if( sum1 == 0.0 ) return(0.0);
+   else              return( sqrt(sum1) );
 }
-*/
+
+
+
 
 //for pearson correlation
 coord_t c_pcc(mi_t* const m, const coord_t* const xs, const coord_t* const ys) {
@@ -297,6 +237,10 @@ coord_t c_pcc(mi_t* const m, const coord_t* const xs, const coord_t* const ys) {
 
 }
 
+coord_t accsum( const int start, const int end) {
+   return( 0.5*((end+1)*end - start*(start-1)) );
+}
+
 
 void maskrankforSCC( coord_t * valuevec, coord_t* ixvec, const int num ) {
 
@@ -305,21 +249,28 @@ void maskrankforSCC( coord_t * valuevec, coord_t* ixvec, const int num ) {
   int lastIndex = 0;
   coord_t meanRank;
   for( i = 1; i < num; i++ ) {
+
+
      if( valuevec[i] != valuevec[i-1] ) {
         lastIndex = i - 1;
+        
         if( preIndex < lastIndex ) {  //start to mask the rank
-            meanRank = 0.5*(lastIndex+1)*(lastIndex+2.0) - 0.5*preIndex*(preIndex+1);
-            for( j = preIndex; j <= lastIndex; j++ ) 
+            meanRank = accsum( preIndex + 1, lastIndex + 1 )/(lastIndex - preIndex + 1);
+            for( j = preIndex; j <= lastIndex; j++ ){
                   ixvec[j] = meanRank;
+            }
         }
+        //initialize 
         preIndex = i;
         lastIndex = 0;
+ 
      }//end if
   }//end for i
 
+
   if( preIndex >= 0 && preIndex < num - 1 ) {
      lastIndex = num - 1;
-     meanRank = 0.5*(lastIndex+1)*(lastIndex+2.0) - 0.5*preIndex*(preIndex+1);
+     meanRank = accsum( preIndex + 1, lastIndex + 1 )/(lastIndex - preIndex + 1);
      for( j = preIndex; j <= lastIndex; j++ )
         ixvec[j] = meanRank;
   }
@@ -370,6 +321,7 @@ coord_t c_scc(mi_t* const m, const coord_t* const xs, const coord_t* const ys, c
   for( i = 0; i < len; i++ ) {
      tmp += (vecixy_y[i] - vecixx_y[i])*(vecixy_y[i] - vecixx_y[i]);
   }
+//  printf("%d, %f\n", len, 1.0 - 6.0*tmp/(len*len*len - len) );
  
   destroy_grid(&m->grid);
 

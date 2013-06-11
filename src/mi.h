@@ -46,5 +46,7 @@ coord_t c_gcc(mi_t* const m, const coord_t* const xs, const coord_t* const ys, c
 coord_t c_pcc(mi_t* const m, const coord_t* const xs, const coord_t* const ys);
 coord_t c_scc(mi_t* const m, const coord_t* const xs, const coord_t* const ys, const int* const xsix, const int* const ysix );
 coord_t c_kcc(mi_t* const m, const coord_t* const xs, const coord_t* const ys );
+coord_t c_eudist(mi_t* const m, const coord_t* const xs, const coord_t* const ys);
+
 
 #endif //MI_H

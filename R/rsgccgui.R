@@ -192,7 +192,7 @@ updateHeatmapMax <- function(h,...) {
   #for TS genes, only two colors
   if( TSGeneClusterFlag == 1 ) {
       hmdata <- gcc.tsheatmap(tsgene_matrix, cpus = CPUNum, 
-                           cormethod = CorMethodType, 
+                           method = CorMethodType, 
                            distancemethod = SimilarityMethodType, 
                            clustermethod= ClusterMethodType,
                            rowhcdata = hm_dataframe$hcr,
@@ -202,7 +202,7 @@ updateHeatmapMax <- function(h,...) {
     
   }else {
       hmdata <- gcc.heatmap(data_matrix, cpus = CPUNum, 
-                            cormethod = CorMethodType, 
+                            method = CorMethodType, 
                             distancemethod = SimilarityMethodType, 
                             clustermethod= ClusterMethodType,
                             rowhcdata = hm_dataframe$hcr,
@@ -222,7 +222,7 @@ updateHeatmapMean <- function(h,...) {
   #for TS genes, only two colors
   if( TSGeneClusterFlag == 0 ) {
       hmdata <- gcc.heatmap(data_matrix, cpus = CPUNum, 
-                            cormethod = CorMethodType, 
+                            method = CorMethodType, 
                             distancemethod = SimilarityMethodType, 
                             clustermethod= ClusterMethodType,
                             rowhcdata = hm_dataframe$hcr,
@@ -247,7 +247,7 @@ updateHeatmapMin <- function(h,...) {
   #for TS genes, only two colors
   if( TSGeneClusterFlag == 1 ) {
       hmdata <- gcc.tsheatmap(tsgene_matrix, cpus = CPUNum, 
-                           cormethod = CorMethodType, 
+                           method = CorMethodType, 
                            distancemethod = SimilarityMethodType, 
                            clustermethod= ClusterMethodType,
                            rowhcdata = hm_dataframe$hcr,
@@ -257,7 +257,7 @@ updateHeatmapMin <- function(h,...) {
     
   }else {    
       hmdata <- gcc.heatmap(data_matrix, cpus = CPUNum, 
-                            cormethod = CorMethodType, 
+                            method = CorMethodType, 
                             distancemethod = SimilarityMethodType, 
                             clustermethod= ClusterMethodType,
                             rowhcdata = hm_dataframe$hcr,
@@ -272,7 +272,7 @@ saveData <- function(h,...) {
   pdf(paste(data_file_dir, "_rsgcc_heatmap.pdf", sep=""), width = 5, height= 5)
   if( TSGeneClusterFlag == 1 ) {
       hm_dataframe <<- gcc.tsheatmap(tsgene_matrix, cpus = CPUNum, 
-                           cormethod = CorMethodType, 
+                           method = CorMethodType, 
                            distancemethod = SimilarityMethodType, 
                            clustermethod= ClusterMethodType,
                            rowhcdata = hm_dataframe$hcr,
@@ -282,7 +282,7 @@ saveData <- function(h,...) {
     
   }else {
       hm_dataframe <<- gcc.heatmap(data_matrix, cpus = CPUNum, 
-                            cormethod = CorMethodType, 
+                            method = CorMethodType, 
                             distancemethod = SimilarityMethodType, 
                             clustermethod= ClusterMethodType,
                             rowhcdata = hm_dataframe$hcr,

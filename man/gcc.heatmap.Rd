@@ -11,7 +11,7 @@
 \usage{
 gcc.heatmap(x, 
       cpus = 1, 
-      cormethod = c("GCC", "PCC", "SCC", "KCC", "BiWt"), 
+      method = c("GCC", "PCC", "SCC", "KCC", "BiWt", "MI", "MINE", "ED"), 
       distancemethod = c("Raw", "Abs", "Sqr"), 
       clustermethod = c("complete", "average", "median", 
                         "centroid", "mcquitty", "single", "ward"), 
@@ -90,8 +90,8 @@ gcc.heatmap(x,
   \item{cpus}{
 	the number of cpus used for correlaiton calcluation. snowfall package in R needed to be installed in advance.
 }
-  \item{cormethod}{
-	a character string that specifies a correlation method to be used for correlation calculation. 
+  \item{method}{
+	a character string that specifies a correlation method to be used for association calculation. 
 }
   \item{distancemethod}{
 	a character string specifying the distance method to be used. Currently, three distance methods are available, include: "Raw" (1-cor)", "Abs" (1-|cor|), and "Sqr" (1-|cor|^2).
@@ -277,7 +277,7 @@ Chuang Ma, Xiangfeng Wang
 \dontrun{
    data(rsgcc)
    x <- rnaseq[1:50,]
-   ghm <- gcc.heatmap(x, cpus = 1, cormethod = "GCC", 
+   ghm <- gcc.heatmap(x, cpus = 1, method = "GCC", 
                distancemethod = "Raw", clustermethod = "complete", labRow = "")
 }
   

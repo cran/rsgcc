@@ -15,7 +15,7 @@
 \usage{
 gcc.hclust(x, 
       cpus = 1, 
-      cormethod = c("GCC", "PCC", "SCC", "KCC", "BiWt"),
+      method = c("GCC", "PCC", "SCC", "KCC", "BiWt", "MI", "MINE", "ED"),
       distancemethod = c("Raw", "Abs", "Sqr"),
       clustermethod = c("complete", "average", "median", 
                         "centroid", "mcquitty", "single", "ward"))
@@ -25,7 +25,7 @@ gcc.hclust(x,
 \arguments{
   \item{x}{a data matrix containing numeric variables, which is the same as the GEMatrix defined in the cor.matrix function.}
   \item{cpus}{the number of cpus used for computation.}
-  \item{cormethod}{a character string indicating the correlation method to be used.}
+  \item{method}{a character string indicating the method to be used to calculate the associations.}
   \item{distancemethod}{a character string specifying the distance method to be used. Currently, three distance methods are available, include: "Raw" (1-cor)", "Abs" (1-|cor|), and "Sqr" (1-|cor|^2).}
   \item{clustermethod}{the distance measure to be used. This must be one of "complete", "average", "median", "centroid", "mcquitty", "single", or "ward".}
 }
@@ -50,16 +50,19 @@ gcc.hclust(x,
 
 \examples{
 
+\dontrun{
+
    #obtain gene expression data of 10 genes.
    data(rsgcc)
    x <- rnaseq[1:10,]
       
    #hierarchical clustering analysis of these 10 genes with GCC method
-   hc <- gcc.hclust(x, cpu=1, cormethod = "GCC", 
+   hc <- gcc.hclust(x, cpu=1, method = "GCC", 
                     distancemethod = "Raw", clustermethod = "complete")
 
    #plot cluster tree
    plot(hc$hc)
+}
 
 }
 

@@ -8,11 +8,11 @@
 
 gcc.hclust <- function(x,
                        cpus = 1,
-                       cormethod = c("GCC", "PCC", "SCC", "KCC", "BiWt"),
+                       method = c("GCC", "PCC", "SCC", "KCC", "BiWt", "MI", "MINE", "ED"),
                        distancemethod = c("Raw", "Abs", "Sqr"),
                        clustermethod = c("complete", "average", "median", "centroid", "mcquitty", "single", "ward") ) {
   
-  if( length(cormethod) > 1 ) {
+  if( length(method) > 1 ) {
     stop("Error: only allow one correlation method")
   }
    
@@ -25,12 +25,13 @@ gcc.hclust <- function(x,
     stop("Error: only allow one cluster method")
   } 
   
-  if( is.null(cormethod) ) cormethod <- "GCC"
+  ##default parameter
+  if( is.null(method) ) method <- "GCC"
   if( is.null(distancemethod)) distancemethod <- "Raw"
   if( is.null(clustermethod)) clustermethod <- "complete"
   
-    ddata <- gcc.dist(x, cpus = cpus, cormethod= cormethod, distancemethod = distancemethod )
-    hcdata <- hclust(ddata$dist, method = clustermethod)
+  ddata <- gcc.dist(x, cpus = cpus, method= method, distancemethod = distancemethod )
+  hcdata <- hclust(ddata$dist, method = clustermethod)
   
   return( list(hc = hcdata, dist = ddata$dist, pairmatrix = ddata$pairmatrix))
                        

@@ -26,17 +26,75 @@ unsigned int gen_seed(const double* const cs, const int n, const int k) {
   return n * k * ((int)cs[n/2]*100);
 }
 
-//compute gcc for all pairs of genes
-void c_cor_all(const int* const corIndexp, double* const xs, int* const xsix, const int* const lp, const int* const np, const int* const kp, const double* const noisep, double* res) {
+//compute gcc for sub pairs of genes
+void c_cor_subset(const int* const corIndexp, double* const xs, int* const xsix, const int* const lp, const int* const np, const int* const kp, const double* const noisep, const int* const nt, 
+ int* const rowidxp, int* const colidxp, const int* const subrownump, const int* const subcolnump, double* res) {
+
   const int corIndex = *corIndexp;
   const int l = *lp;
   const int n = *np;
   const int k = *kp;
   const double noise = *noisep;
+  const int ntd = *nt;
+  int xnormed[l];
+
+  const int subrownum = *subrownump;
+  const int subcolnum = *subcolnump;
+
+#ifdef _OPENMP
+  #pragma omp parallel num_threads(ntd)
+#endif
+  {
+    int i, j, ii, jj;
+    unsigned int seed = gen_seed(xs, l*n, k);
+
+#ifdef _OPENMP
+    #pragma omp for nowait
+#endif
+    for (i = 0; i < l; i++) {
+      double* const p = xs+(i*n);
+      xnormed[i] = 1.0;
+    }
+
+    mi_t mi;
+    make_mi(&mi, n, k);
+
+#ifdef _OPENMP
+    #pragma omp for schedule(dynamic)
+#endif
+    for (ii = 0; ii < subrownum; ii++){
+        i = rowidxp[ii] - 1;
+      for (jj = 0; jj < subcolnum; jj++){
+          j = colidxp[jj] - 1;
+       	  if( corIndex == 1 )      res[ii*subcolnum+jj] = c_gcc(&mi, xs+(i*n), xs+(j*n), xsix+(i*n), xsix+(j*n) );  //GCC
+          else if(corIndex == 2 )  res[ii*subcolnum+jj] = c_pcc(&mi, xs+(i*n), xs+(j*n));                           //PCC
+          else if(corIndex == 3 )  res[ii*subcolnum+jj] = c_scc(&mi, xs+(i*n), xs+(j*n), xsix+(i*n), xsix+(j*n) );  //SCC
+          else if(corIndex == 4 )  res[ii*subcolnum+jj] = c_kcc(&mi, xs+(i*n), xs+(j*n));                           //KCC
+          else                     res[ii*subcolnum+jj] = c_eudist(&mi, xs+(i*n), xs+(j*n));                        //ED
+          
+      }
+    }
+
+    destroy_mi(&mi);
+  }
+}
+
+
+
+
+//compute gcc for all pairs of genes
+void c_cor_all(const int* const corIndexp, double* const xs, int* const xsix, const int* const lp, const int* const np, const int* const kp, const double* const noisep, const int* const nt, double* res) {
+
+  const int corIndex = *corIndexp;
+  const int l = *lp;
+  const int n = *np;
+  const int k = *kp;
+  const double noise = *noisep;
+  const int ntd = *nt;
   int xnormed[l];
 
 #ifdef _OPENMP
-  #pragma omp parallel
+  #pragma omp parallel num_threads(ntd)
 #endif
   {
     int i, j;
@@ -47,14 +105,16 @@ void c_cor_all(const int* const corIndexp, double* const xs, int* const xsix, co
 #endif
     for (i = 0; i < l; i++) {
       double* const p = xs+(i*n);
-      //xnormed[i] = normalize(p, n);
       xnormed[i] = 1.0;
-      //add_noise(p, n, noise, &seed);
     }
 
     #pragma omp for
-    for (i = 0; i < l; i++)
-      res[i*l+i] = 0.0;
+    for (i = 0; i < l; i++) {
+      if( corIndex == 5 ) 
+         res[i*l+i] = 0.0;
+      else
+         res[i*l+i] = 1.0;  //diag for 1.0
+    }
 
     mi_t mi;
     make_mi(&mi, n, k);
@@ -63,13 +123,12 @@ void c_cor_all(const int* const corIndexp, double* const xs, int* const xsix, co
     #pragma omp for schedule(dynamic)
 #endif
     for (i = 1; i < l; i++){
-    //  res[i*l+j] = 1.0;
       for (j = 0; j < i; j++){
-       	  if( corIndex == 1 )  res[i*l+j] = res[j*l+i] = c_gcc(&mi, xs+(i*n), xs+(j*n), xsix+(i*n), xsix+(j*n) );  //GCC
-          else if(corIndex == 2 ) res[i*l+j] = res[j*l+i] = c_pcc(&mi, xs+(i*n), xs+(j*n));                        //PCC
-          else if(corIndex == 3 ) res[i*l+j] = res[j*l+i] = c_scc(&mi, xs+(i*n), xs+(j*n), xsix+(i*n), xsix+(j*n) ); //SCC
-          else if( corIndex == 4 ) res[i*l+j] = res[j*l+i] = c_kcc(&mi, xs+(i*n), xs+(j*n));                         //KCC
-          else                     res[i*l+j] = res[j*l+i] = NAN; 
+       	  if( corIndex == 1 )      res[i*l+j] = res[j*l+i] = c_gcc(&mi, xs+(i*n), xs+(j*n), xsix+(i*n), xsix+(j*n) ); //GCC
+          else if(corIndex == 2 )  res[i*l+j] = res[j*l+i] = c_pcc(&mi, xs+(i*n), xs+(j*n));                          //PCC
+          else if(corIndex == 3 )  res[i*l+j] = res[j*l+i] = c_scc(&mi, xs+(i*n), xs+(j*n), xsix+(i*n), xsix+(j*n) ); //SCC
+          else if(corIndex == 4 )  res[i*l+j] = res[j*l+i] = c_kcc(&mi, xs+(i*n), xs+(j*n));                          //KCC
+          else                     res[i*l+j] = res[j*l+i] = c_eudist(&mi, xs+(i*n), xs+(j*n));                       //ED
       }
     }
 

@@ -18,7 +18,7 @@ gcc.tsheatmap(x,
       cpus = 1,
                         
       ## correlation method
-      cormethod = c("GCC", "PCC", "SCC", "KCC", "BiWt"),
+      method = c("GCC", "PCC", "SCC", "KCC", "BiWt", "MI", "MINE", "ED"),
                           
       distancemethod = c("Raw", "Abs", "Sqr"),
                            
@@ -91,8 +91,8 @@ gcc.tsheatmap(x,
   \item{cpus}{
 	the number of cpus used for correlaiton calcluation. snowfall package in R needed to be installed in advance.
 }
-  \item{cormethod}{
-	a character string that specifies a correlation method to be used for correlation calculation.
+  \item{method}{
+	a character string that specifies a correlation method to be used for association calculation.
 }
   \item{distancemethod}{
 	a character string specifying the distance method to be used. Currently, three distance methods are available, include: "Raw" (1-cor)", "Abs" (1-|cor|), and "Sqr" (1-|cor|^2).
@@ -217,11 +217,11 @@ Chuang Ma, Xiangfeng Wang
 \dontrun{
    data(rsgcc)
          
-   #get expression matrix of tissue-specific genes, here we obtained 2279 ts-genes
-   x <- getsgene(rnaseq)$tsgene
+   #get expression matrix of tissue-specific genes
+   tsRes <- getsgene(rnaseq, tsThreshold = 0.75, MeanOrMax = "Max", Fraction = TRUE)
 
    #heat map of tissue-specific genes
-   thm <- gcc.tsheatmap(x[1:100,], cpus = 1, cormethod = "GCC", 
+   thm <- gcc.tsheatmap(tsRes$tsgene, cpus = 1, method = "GCC", 
                     distancemethod = "Raw", clustermethod = "complete")
 }
 }

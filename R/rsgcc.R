@@ -6,13 +6,6 @@
 ##################################################################################
 
 
-
-##############################################################################
-#Function: this function computes the Gini correlation between two variables,# 
-##GCC results: gcc.rankx and gcc.ranky use the rank info of x and y, respectively.
-##Date: 2012-02-16
-##############################################################################
-
 if( !require(biwt)) install.packages("biwt")
 require(biwt)
 
@@ -49,8 +42,8 @@ onegcc <- function(x, y) {
     Sum2 <- sum(weightvec*vectselfsort)
     if( Sum2 == 0 ) {
       cat("\n", x, "\n", y, "\n")
-     cat("Warning: the Denominator is ZRRO, the value of one variable is consistent.")
-     gcccor <- 0
+      cat("Warning: the Denominator is ZRRO, the value of one variable is consistent.")
+      gcccor <- 0
     }else {
       gcccor <- Sum1/Sum2
     }
@@ -467,16 +460,6 @@ cor.matrix <- function( GEMatrix,
 
 
 
-
-
-
-
-########################################################################
-###########################################################################
-
-
-
-
 #############################################################################
 ##This function plots HeatMap with different similarity measures (1-CorCoef) 
 ##Here CorCoef could be GCC (Gini correlation coefficient), 
@@ -493,7 +476,7 @@ gcc.heatmap <- function(x,
                         cpus = 1,
                         
                         ## correlation method
-                        cormethod = c("GCC", "PCC", "SCC", "KCC", "BiWt"),
+                        method = c("GCC", "PCC", "SCC", "KCC", "BiWt", "MI", "MINE", "ED"),
                         
                         ## similarity method
                         distancemethod = c("Raw", "Abs", "Sqr"),
@@ -636,7 +619,7 @@ gcc.heatmap <- function(x,
     }
     else if (is.integer(Rowv)) {
       if( missing(rowhcdata) | is.null(rowhcdata) ) {
-        hcr <- gcc.hclust( x, cpus = cpus, cormethod = cormethod, distancemethod = distancemethod, clustermethod = clustermethod)
+        hcr <- gcc.hclust( x, cpus = cpus, method = method, distancemethod = distancemethod, clustermethod = clustermethod)
       }else {
         hcr <- rowhcdata
       }
@@ -648,7 +631,7 @@ gcc.heatmap <- function(x,
     else if (isTRUE(Rowv)) {
         Rowv <- rowMeans(x, na.rm = na.rm)
         if( missing(rowhcdata) | is.null(rowhcdata) ) {
-          hcr <- gcc.hclust( x, cpus = cpus, cormethod = cormethod, distancemethod = distancemethod, clustermethod = clustermethod)
+          hcr <- gcc.hclust( x, cpus = cpus, method = method, distancemethod = distancemethod, clustermethod = clustermethod)
         }else {
           hcr <- rowhcdata
         }
@@ -678,7 +661,7 @@ gcc.heatmap <- function(x,
       aa <- x
       if( !symm ) aa <- t(x)
       if( missing(colhcdata) | is.null(colhcdata) ) {
-        hcc <- gcc.hclust( aa, cpus = cpus, cormethod = cormethod, distancemethod = distancemethod, clustermethod = clustermethod)
+        hcc <- gcc.hclust( aa, cpus = cpus, method = method, distancemethod = distancemethod, clustermethod = clustermethod)
       }else {
         hcc <- colhcdata
       }
@@ -692,7 +675,7 @@ gcc.heatmap <- function(x,
         aa <- x
         if( !symm ) aa <- t(x)
         if( missing(colhcdata) | is.null(colhcdata) ) {
-          hcc <- gcc.hclust( aa, cpus = cpus, cormethod = cormethod, distancemethod = distancemethod, clustermethod = clustermethod)
+          hcc <- gcc.hclust( aa, cpus = cpus, method = method, distancemethod = distancemethod, clustermethod = clustermethod)
         }else {
           hcc <- colhcdata
         }
@@ -977,63 +960,175 @@ gcc.heatmap <- function(x,
 
 
 ##check the variable with multiple elements.
-.check.variable <- function(var, name) {
-   if( is.vector(var) ) {
+.check.variable <- function(var, name, candidates) {
+   
+   if( is.vector(var) ){
      vartmp = var[1]
-   }
-   if( length(vartmp) == 0 ) {
+    }
+
+   if( length(vartmp) == 0 | is.null(var) == TRUE ) {
      stop( paste(name, "must have a value with the candicate parameters."))
    }
-   return(vartmp)
+   
+   if( length( which( candidates == vartmp ) ) == 0 ){
+      stop( paste(name, "must have a value with the candicate parameters.") )
+   }
+
+   vartmp
 }
 
 
 
 #correlations for gene pairs of all genes
-.cor_all <- function(xs, corMethod = "GCC") {
+.cor_all <- function(xs, rowidx = NULL, colidx = NULL, corMethod = "GCC", cpus = 1, saveType = "matrix", backingpath = NULL, backingfile = "adj_mat", descriptorfile = "adj_desc" ) {
   h <- nrow(xs)
   w <- ncol(xs)
   k <- 3
   noise <- 0.0
-
-  corIndex <- c(1,2,3,4)
-  names(corIndex) <- c("GCC", "PCC", "SCC", "KCC")
+  
+  subrownum <- 0
+  subcolnum <- 0
+  if( (length(rowidx) != h) | (length(colidx) != w) ) {
+    subrownum <- length(rowidx)
+    subcolnum <- length(colidx)
+  }
+ 
+  corIndex <- c(1,2,3,4, 5)
+  names(corIndex) <- c("GCC", "PCC", "SCC", "KCC", "ED")
   curcorIndex <- corIndex[corMethod]
+
 
   res <- NULL
   xsix <- NULL
-  if( corMethod == "GCC" || corMethod == "SCC"  ) {
-     xsix <- apply( xs, 1, function(x) sort( sort(x,index.return=TRUE)$ix, index.return=TRUE)$ix )
-     res <- .C("c_cor_all", as.integer(curcorIndex), as.double(t(xs)), as.integer(xsix), as.integer(h), as.integer(w), as.integer(k), as.double(noise), res = double(h*h), PACKAGE = "rsgcc", DUP = TRUE)$res
-  }else if( corMethod == "PCC" || corMethod == "KCC" ) {
-     res <- .C("c_cor_all", as.integer(curcorIndex), as.double(t(xs)), as.integer(xsix), as.integer(h), as.integer(w), as.integer(k), as.double(noise), res = double(h*h), PACKAGE = "rsgcc", DUP = TRUE)$res
-  }else{
-     stop("Error: undefined cor method).\n")
-  }
+  Rownames <- NULL
+  Colnames <- NULL
 
-  m <- matrix(res, nrow=h)
-  colnames(m) <- rownames(xs)
-  rownames(m) <- rownames(xs)
-  return(m)
+  #all gene paris considered 
+  if( (length(rowidx) == h) & (length(colidx) == h)  ) {  
+    Rownames <- rownames(xs)
+    Colnames <- Rownames
+    if( corMethod == "GCC" || corMethod == "SCC"  ) {
+        xsix <- apply( xs, 1, function(x) sort( sort(x,index.return=TRUE)$ix, index.return=TRUE)$ix )
+        res <- .C("c_cor_all", as.integer(curcorIndex), as.double(t(xs)), as.integer(xsix), as.integer(h), as.integer(w), as.integer(k), as.double(noise), as.integer(cpus), res = double(h*h), PACKAGE = "rsgcc", DUP = TRUE)$res
+    }else if( corMethod == "PCC" || corMethod == "KCC" || corMethod == "ED" ) {
+       res <- .C("c_cor_all", as.integer(curcorIndex), as.double(t(xs)), as.integer(xsix), as.integer(h), as.integer(w), as.integer(k), as.double(noise), as.integer(cpus),  res = double(h*h), PACKAGE = "rsgcc", DUP = TRUE)$res
+    }else{
+     stop("Error: undefined cor method).\n")
+    }
+  }else {  #part gene paris considered 
+ 
+     Rownames <- rownames(xs)[rowidx]
+     Colnames <- rownames(xs)[colidx]
+     if( corMethod == "GCC" || corMethod == "SCC"  ) {
+        xsix <- apply( xs, 1, function(x) sort( sort(x,index.return=TRUE)$ix, index.return=TRUE)$ix )
+        res <- .C("c_cor_subset", as.integer(curcorIndex), as.double(t(xs)), as.integer(xsix), as.integer(h), as.integer(w), as.integer(k), as.double(noise), as.integer(cpus), as.integer(rowidx), as.integer(colidx), as.integer(subrownum), as.integer(subcolnum), res = double(subrownum*subcolnum), PACKAGE = "rsgcc", DUP = TRUE)$res
+      }else if( corMethod == "PCC" || corMethod == "KCC" || corMethod == "ED" ) {
+        res <- .C("c_cor_subset", as.integer(curcorIndex), as.double(t(xs)), as.integer(xsix), as.integer(h), as.integer(w), as.integer(k), as.double(noise), as.integer(cpus), as.integer(rowidx), as.integer(colidx), as.integer(subrownum), as.integer(subcolnum), res = double(subrownum*subcolnum), PACKAGE = "rsgcc", DUP = TRUE)$res
+      }else{
+        stop("Error: undefined cor method).\n")
+      }
+   }
+
+
+
+  m <- t( matrix(res, nrow=length(Colnames)) )
+  rownames(m) <- Rownames
+  colnames(m) <- Colnames
+  if( saveType == "bigmatrix" ) {
+     options(bigmemory.allow.dimnames=TRUE)
+     if( is.null(backingpath) )
+       backingpath <- getwd()
+     m <- as.big.matrix(m, type = "double", separated=FALSE, backingfile= backingfile, backingpath= backingpath, descriptorfile = descriptorfile, shared = TRUE)
+  } 
+ 
+  m
   
 }
 
 
 
+#############################################################################################
 #generate adjacency matrix from a gene expression data
-adjacencymatrix <- function(mat, method = c("GCC", "PCC", "SCC", "KCC", "MI"), k = 3) {
-  .check.matrix(mat, k, "xs")
-  method <- .check.variable(method, "method")
+#Modified on 2012-11-28. two parameters (genes.row, genes.col) were added for generating a correlation matrix with length(genes.row) X length(genes.col).
+adjacencymatrix <- function(mat, genes.row = NULL, genes.col = NULL, method = c("GCC", "PCC", "SCC", "KCC", "BiWt", "MI", "MINE", "ED"), k = 3, cpus = 1, saveType = "matrix", backingpath = NULL, backingfile = "adj_mat", descriptorfile = "adj_desc", ... ) {
 
+  call <- match.call()
+
+  .check.matrix(mat, k, "xs")
+  method <- .check.variable(method, "method", c("GCC", "PCC", "SCC", "KCC", "BiWt", "MI", "MINE", "ED") )
+  
   if (method == "MI" && k < 2)
     stop("k must be >= 2.")
 
-  #for knnmi
-  if( method == "MI" ){
-    return( knnmi.all(mat, k, noise=1e-12) )
-  }else{
-    return( .cor_all(mat, method) )
+  geneNames <- rownames(mat)
+  if( is.null(geneNames) ) 
+    geneNames <- c(1:nrow(mat)) 
+
+  ##for BiWt
+  if( method == "BiWt" ) {
+    m <- cor.matrix(mat, cpus = cpus, cormethod= method, style= "all.pairs", pernum= 0, sigmethod= "two.sided", output = "matrix")$corMatrix
+    rownames(m) <- rownames(mat)
+    colnames(m) <- rownames(mat)
+    if( saveType == "bigmatrix" ) {
+      options(bigmemory.allow.dimnames=TRUE)
+      if( is.null(backingpath) )
+         backingpath <- getwd()
+       m <- as.big.matrix(m, type = "double", separated=FALSE, backingfile= backingfile, backingpath= backingpath, descriptorfile = descriptorfile, shared = TRUE)
+    }#end if bigmatrix
+    return(m)
   }
+  
+  ##for mine
+  if( method == "MINE" ) {
+    m <- mine(t(mat))$MIC
+    rownames(m) <- rownames(mat)
+    colnames(m) <- rownames(mat)
+    if( saveType == "bigmatrix" ) {
+      options(bigmemory.allow.dimnames=TRUE)
+      if( is.null(backingpath) )
+         backingpath <- getwd()
+       m <- as.big.matrix(m, type = "double", separated=FALSE, backingfile= backingfile, backingpath= backingpath, descriptorfile = descriptorfile, shared = TRUE)
+    }#end if bigmatrix
+    return(m)
+  }
+
+  #for other methods
+  Rownames <- geneNames
+  Colnames <- geneNames
+  row.idx <- c(1:nrow(mat))
+  col.idx <- c(1:nrow(mat))
+  if( !is.null(genes.row) ) {
+     row.idx <- match( genes.row, geneNames)
+     if( length( which(is.na(row.idx)) ) > 0 ) {
+       stop("Error: some gene names in genes.row are not found in rownames(mat).\n")
+     }
+     Rownames <- rownames(mat)[row.idx]
+   }
+   if( !is.null(genes.col) ) {
+    col.idx <- match( genes.col, geneNames)
+    if( length( which(is.na(col.idx)) ) > 0 ) {
+      stop("Error: some gene names in genes.col are not found in rownames(mat).\n")
+    }
+    Colnames <- rownames(mat)[col.idx]
+  }
+
+  
+  
+
+  #for knnmi
+  m <- NULL
+  if( method == "MI" ){
+    if( is.null(genes.row) | is.null(genes.col) ) {
+      m <- knnmi.cross( mat[row.idx,], mat[col.idx,], k, noise=1e-12 )
+    }else {
+      m <- knnmi.all(mat, k, noise=1e-12)
+    }
+    rownames(m) <- Rownames
+    colnames(m) <- Colnames
+  }else{
+    m <-.cor_all(xs = mat, rowidx = row.idx, colidx = col.idx, corMethod = method, cpus = cpus, saveType = saveType, backingpath = backingpath, backingfile = backingfile, descriptorfile = descriptorfile)
+  }
+  m
 }
 
 

@@ -6,16 +6,17 @@
 
 gcc.dist <- function(x, 
                      cpus = 1,
-                     cormethod = c("GCC", "PCC", "SCC", "KCC", "BiWt"),
+                     method = c("GCC", "PCC", "SCC", "KCC", "BiWt", "MI", "MINE", "ED"),
                      distancemethod = c("Raw", "Abs", "Sqr")) {
   
   if( length(distancemethod) > 1 ) {
     stop("Error: only allow one distance method")
   }
-  if( is.null(cormethod)) cormethod = "GCC"
+  if( is.null(method)) method = "GCC"
   if( is.null(distancemethod)) distancemethod = "Raw"
   
-  AllPairMatrix <- cor.matrix(x, cpus = cpus, cormethod= cormethod, style= "all.pairs", pernum= 0, sigmethod= "two.sided", output = "matrix")$corMatrix
+  AllPairMatrix <- adjacencymatrix( mat = x, method = method, cpus = cpus, saveType = "matrix", backingpath = NULL, backingfile = "adj_mat", descriptorfile = "adj_desc" ) 
+ 
  
   if( distancemethod == "Raw") {
     ad <- as.dist( 1- AllPairMatrix ) 
