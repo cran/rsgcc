@@ -45,9 +45,8 @@ getsgene(x, Log = FALSE, Base = 2, AddOne = FALSE,
 }
 \value{
 	A list with following components:
-    \item{tsgene }{a data matrix containing expression vlaues of tissue specific genes.}
-    \item{tscore }{a data matrix with three columns containg the gene index information from x, tissue specificity score and the tissue information with the tissue specificity score.}
-    \item{uniquets }{a data matrix containing the unqiue tissue informaiton output by uniqueTissues function.}
+    \item{csGenes }{a data matrix containing expression vlaues of tissue specific genes.}
+    \item{csScoreMat }{a data matrix with three columns containg the gene index information from x, tissue specificity score and the tissue information with the tissue specificity score.}
 }
 
 
@@ -57,9 +56,11 @@ Chuang Ma, Xiangfeng Wang.
 }
 
 
-\seealso{
-\code{\link{uniqueTissues}}, \code{\link{gcc.tsheatmap}}.
+
+\references{
+[1] Chuang Ma, Xiangfeng Wang. Machine learning-based differential network analysis of transcriptomic data: a case study of stress-responsive gene expression in Arabidopsis thaliana. 2013 (Submitted).
 }
+
 
 
 \examples{

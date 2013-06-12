@@ -14,8 +14,8 @@
 \tabular{ll}{
 	Package: \tab rsgcc\cr
 	Type: \tab Package\cr
-	Version: \tab 1.0.5\cr
-	Date: \tab 2013-06-11\cr
+	Version: \tab 1.0.6\cr
+	Date: \tab 2013-06-12\cr
 	License: \tab GPL(>=2)\cr
 }
 }
@@ -36,7 +36,7 @@
 
       biocLite("ctc")
 
-3) To run the "rsgcc.gui()" function, please do remember to select the GUI toolkit "gWidgetsRGtk2".
+3) To run the "rsgcc.gui()" function, please do remember to select the GUI toolkit "gWidgetsRGtk2". 
 
 4) Bug reports and suggestions/questions can be sent to Chuang Ma (chuangma2006@gmail.com) or Xiangfeng Wang (xwang1@cals.arizona.edu).
 	

@@ -36,13 +36,15 @@ void c_cor_subset(const int* const corIndexp, double* const xs, int* const xsix,
   const int k = *kp;
   const double noise = *noisep;
   const int ntd = *nt;
-  int xnormed[l];
+  double xnormed[l];
+  int ntd_new = ntd;
 
   const int subrownum = *subrownump;
   const int subcolnum = *subcolnump;
+//#pragma omp parallel num_threads(ntd_new), test this 
 
 #ifdef _OPENMP
-  #pragma omp parallel num_threads(ntd)
+  #pragma omp parallel
 #endif
   {
     int i, j, ii, jj;
@@ -91,10 +93,12 @@ void c_cor_all(const int* const corIndexp, double* const xs, int* const xsix, co
   const int k = *kp;
   const double noise = *noisep;
   const int ntd = *nt;
-  int xnormed[l];
+  double xnormed[l];
+  int ntd_new = ntd;
+//#pragma omp parallel num_threads(ntd_new), test this 
 
 #ifdef _OPENMP
-  #pragma omp parallel num_threads(ntd)
+  #pragma omp parallel
 #endif
   {
     int i, j;
